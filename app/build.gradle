@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.lolchat.myanmarking.myanchat"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:appcompat-v7:$support_library_version"
+    compile "com.android.support.constraint:constraint-layout:$constraint_layout"
+    compile "com.android.support:design:$support_library_version"
+    compile "com.jakewharton.timber:timber:$timber"
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.anko:anko-sdk23:$anko_version"
+
+    compile 'com.google.dagger:dagger:2.10'
+    kapt 'com.google.dagger:dagger-compiler:2.10'
+
+    compile "org.igniterealtime.smack:smack-android:$smack"
+    compile "org.igniterealtime.smack:smack-tcp:$smack"
+    compile "org.igniterealtime.smack:smack-extensions:$smack"
+
+    compile "io.reactivex.rxjava2:rxjava:$rx_java"
+    compile "io.reactivex.rxjava2:rxandroid:$rx_android"
+}
+buildscript {
+    ext.kotlin_version = '1.1.2-3'
+    ext.support_library_version = '25.3.1'
+    ext.anko_version = '0.9'
+    ext.constraint_layout = '1.0.2'
+    ext.timber = '4.5.1'
+    ext.smack = '4.2.0'
+    ext.rx_java = '2.1.0'
+    ext.rx_android = '2.0.1'
+
+    repositories {
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+
+    dependencies {
+        /**
+         * Kotlin Android Extensions
+         */
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
+}
