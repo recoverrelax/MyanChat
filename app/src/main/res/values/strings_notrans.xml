@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<string name="app_name" translatable="false">ProzisGo</string>-->
+    <string name="empty_string" translatable="false" />
+    <string name="space_string" translatable="false" >" "</string>
+
+    <string name="roboto_regular" translatable="false">sans-serif</string>
+    <string name="roboto_light" translatable="false">sans-serif-light</string>
+    <string name="roboto_condensed" translatable="false">sans-serif-condensed</string>
+    <string name="roboto_thin" translatable="false">sans-serif-thin</string>
+    <string name="roboto_medium" translatable="false">sans-serif-medium</string>
+</resources>

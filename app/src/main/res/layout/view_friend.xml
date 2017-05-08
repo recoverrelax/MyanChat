@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="RelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.lolchat.myanmarking.myanchat.base.view.SquareImageView
+        android:id="@+id/friendSummonerIcon"
+        android:layout_alignTop="@+id/friendName"
+        android:layout_alignBottom="@+id/friendMessage"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginEnd="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/friendName"
+        android:text="MyanMarkKing"
+        android:textStyle="bold"
+        android:fontFamily="@string/roboto_thin"
+        android:textColor="@color/black"
+        android:layout_toStartOf="@+id/friendStatus"
+        android:layout_toEndOf="@+id/friendSummonerIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/friendMessage"
+        android:layout_below="@+id/friendName"
+        android:textColor="@color/black_87"
+        android:fontFamily="@string/roboto_light"
+        android:layout_toStartOf="@+id/friendStatus"
+        android:layout_toEndOf="@+id/friendSummonerIcon"
+        android:text="Just gave up... Cya LoL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <TextView
+        android:id="@+id/friendStatus"
+        android:text="Chatting"
+        android:background="@drawable/round_rect"
+        android:backgroundTint="@color/black_54"
+        android:textColor="@color/white"
+        android:padding="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</merge>
