@@ -5,4 +5,7 @@ import io.reactivex.Observable
 
 interface IXmppManager{
     fun getFriendListName(): Observable<List<Friend>>
+
+    fun addOnFriendChangeListener(listener: IFriendChangeListener)
+    fun removeOnFriendChangeListener(listener: IFriendChangeListener)
 }

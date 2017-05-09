@@ -7,14 +7,16 @@ import com.lolchat.myanmarking.myanchat.base.BaseFragment
 import com.lolchat.myanmarking.myanchat.di.component.DaggerFragFriendListComponent
 import com.lolchat.myanmarking.myanchat.di.component.MyAppComponent
 import com.lolchat.myanmarking.myanchat.di.module.FragFriendListModule
+import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
 import com.lolchat.myanmarking.myanchat.ui.adapter.FragFriendListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_friend_list.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class FragFriendList: BaseFragment(){
+class FragFriendList: BaseFragment() {
     override fun getLayoutRes(): Int = R.layout.frag_friend_list
 
     companion object{
@@ -34,8 +36,18 @@ class FragFriendList: BaseFragment(){
                 .build().inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        xmppManager.removeOnFriendChangeListener(myAdapter)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        xmppManager.addOnFriendChangeListener(myAdapter)
 
         friendListRecyclerView.run {
             layoutManager = myLayoutManager

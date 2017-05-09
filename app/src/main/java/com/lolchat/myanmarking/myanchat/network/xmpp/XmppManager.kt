@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IRosterManager
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
@@ -140,5 +141,13 @@ class XmppManager(
             isConnAndRosterReady
                     .flatMap { rosterManager.getFriendListName() }
         }
+    }
+
+    override fun addOnFriendChangeListener(listener: IFriendChangeListener){
+        rosterManager.addOnFriendChangeListener(listener)
+    }
+
+    override fun removeOnFriendChangeListener(listener: IFriendChangeListener){
+        rosterManager.removeOnFriendChangeListener(listener)
     }
 }

@@ -6,6 +6,7 @@ import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import org.xml.sax.SAXException
+import timber.log.Timber
 import java.io.IOException
 import java.io.StringReader
 import javax.xml.parsers.DocumentBuilder
@@ -16,6 +17,7 @@ class RiotXmlParser {
 
     companion object{
         const val STATUS_MSG = "statusMsg"
+        const val PROFILE_ICON = "profileIcon"
 
         fun buildCustomAttrFromStatusMessage(presence: Presence): Element? {
             presence.status ?: return null
@@ -25,7 +27,7 @@ class RiotXmlParser {
             try {
                 builder = factory.newDocumentBuilder()
             } catch (e: ParserConfigurationException) {
-                e.printStackTrace()
+                Timber.e(e)
                 return null
             }
 
@@ -33,10 +35,10 @@ class RiotXmlParser {
             try {
                 document = builder.parse(InputSource(StringReader(presence.status)))
             } catch (e: SAXException) {
-                e.printStackTrace()
+                Timber.e(e)
                 return null
             } catch (e: IOException) {
-                e.printStackTrace()
+                Timber.e(e)
                 return null
             }
 

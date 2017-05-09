@@ -15,7 +15,7 @@ class FragFriendListModule(
 
     @Provides
     @FragmentScope
-    fun providesAdapter(): FragFriendListAdapter = FragFriendListAdapter()
+    fun providesAdapter(): FragFriendListAdapter = FragFriendListAdapter(act)
 
     @Provides
     @FragmentScope
