@@ -28,7 +28,7 @@ class FragFriendListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return FriendListViewHolder(FriendView(parent.context, null, 0, 0))
+        return FriendListViewHolder(FriendView(parent.context, null, 0))
     }
 
     fun setAdapterItems(friendList: List<Friend>) {
@@ -49,7 +49,9 @@ class FragFriendListAdapter(
                             name = item.name,
                             sumIconUrl = item.profileIcon,
                             statusMessage = item.statusMessage,
-                            presenceStatus = "Chatting"
+                            presenceStatus = "Chatting",
+                            isFriendOnline = item.isOnline,
+                            gameStatus = item.gameStatus
                     )
             )
         }
@@ -82,11 +84,9 @@ class FragFriendListAdapter(
             @Suppress("LoopToCallChain")
             for (pos in friends.indices) {
                 val friend = friends[pos]
-                if (friendList.contains(friend)) {
-                    if (INFO_LOG) Timber.i("onFriendsChanged: ${friend.name}")
-                    friendList[pos] = friend
-                    notifyItemChanged(pos)
-                }
+                friendList.removeAt(pos)
+                friendList.add(pos, friend)
+                notifyItemChanged(pos)
             }
         }
     }

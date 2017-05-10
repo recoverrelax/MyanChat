@@ -1,4 +1,4 @@
-package com.lolchat.myanmarking.myanchat.other.Parser
+package com.lolchat.myanmarking.myanchat.other.parser
 
 import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
 import org.jivesoftware.smack.packet.Presence
@@ -18,6 +18,7 @@ class RiotXmlParser {
     companion object{
         const val STATUS_MSG = "statusMsg"
         const val PROFILE_ICON = "profileIcon"
+        const val GAME_STATUS = "gameStatus"
 
         fun buildCustomAttrFromStatusMessage(presence: Presence): Element? {
             presence.status ?: return null

@@ -10,6 +10,7 @@ import com.lolchat.myanmarking.myanchat.di.module.FragFriendListModule
 import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
+import com.lolchat.myanmarking.myanchat.other.recyclerview.VerticalDividerRvDecorator
 import com.lolchat.myanmarking.myanchat.ui.adapter.FragFriendListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.frag_friend_list.*
@@ -51,6 +52,7 @@ class FragFriendList: BaseFragment() {
 
         friendListRecyclerView.run {
             layoutManager = myLayoutManager
+            addItemDecoration(VerticalDividerRvDecorator(activity))
             adapter = myAdapter
         }
 

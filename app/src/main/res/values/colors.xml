@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#d50000</color>
-    <color name="colorPrimaryA">#64d50000</color>
+    <color name="colorPrimaryA">#c8d50000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
@@ -10,7 +10,11 @@
     <color name="white_70">#b2ffffff</color>
     <color name="white_75">#96ffffff</color>
     <color name="white_50">#7dffffff</color>
+    <color name="white_25">#32ffffff</color>
     <color name="black">#000</color>
+
+    <color name= "green_700_a50">#50388e3c</color>
+    <color name= "red_700_a50">#32d32f2f</color>
 
     <color name="black_87">#d9000000</color>
     <color name="black_190">#be000000</color>
@@ -21,4 +25,13 @@
     <color name="offline_item_bg">#96d32f2f</color>
 
     <color name="windowBackground">@color/md_grey_100</color>
+
+    <color name="game_status_inqueu">#82f9a825</color>
+    <color name="game_status_spectating">#82f9a825</color>
+    <color name="game_status_champ_select">#82f9a825</color>
+    <color name="game_status_ingame">#82f57f17</color>
+    <color name="game_status_none">#82558b2f</color>
+    <color name="game_status_chat">#82558b2f</color>
+    <color name="game_status_away">#82fdd835</color>
+    <color name="game_status_dnd">#82ff3d00</color>
 </resources>

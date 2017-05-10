@@ -1,8 +1,8 @@
 package com.lolchat.myanmarking.myanchat.io.model.xmpp
 
-import com.lolchat.myanmarking.myanchat.other.Parser.RiotXmlParser
+import com.lolchat.myanmarking.myanchat.io.enums.GameStatus
+import com.lolchat.myanmarking.myanchat.other.parser.RiotXmlParser
 import org.jivesoftware.smack.packet.Presence
-import org.jxmpp.jid.Jid
 import org.w3c.dom.Element
 
 @Suppress("JoinDeclarationAndAssignment")
@@ -16,7 +16,26 @@ class Friend(
     get() = RiotXmlParser.getStringFromXmlTag(RiotXmlParser.STATUS_MSG, rootElement)
 
     val profileIcon: String
-    get() = RiotXmlParser.getStringFromXmlTag(RiotXmlParser.PROFILE_ICON, rootElement)
+    get(){
+        return RiotXmlParser.getStringFromXmlTag(RiotXmlParser.PROFILE_ICON, rootElement)
+    }
+
+    val isOnline: Boolean
+    get() = presence.isAvailable
+
+    val gameStatus: GameStatus
+    get() {
+        val statusStanza =  RiotXmlParser.getStringFromXmlTag(RiotXmlParser.GAME_STATUS, rootElement)
+        val gs = GameStatus.getByXmppStanza(statusStanza)
+        if(gs == GameStatus.NONE){
+            return when{
+                presence.isAway -> GameStatus.AWAY
+                else -> GameStatus.NONE
+            }
+        }else{
+            return GameStatus.NONE
+        }
+    }
 
     init {
         rootElement = RiotXmlParser.buildCustomAttrFromStatusMessage(presence)

@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">MyanChat</string>
     <string name="action_settings">Settings</string>
+
+    <string name="game_status_in_queue">in queue</string>
+    <string name="game_status_spectating">spectating</string>
+    <string name="game_status_champion_select">in champion select</string>
+    <string name="game_status_champion_ingame">playing</string>
+    <string name="away">away</string>
+    <string name="dnd">dnd</string>
+    <string name="chating">chating</string>
 </resources>
