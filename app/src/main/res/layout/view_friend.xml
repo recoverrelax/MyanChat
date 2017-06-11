@@ -1,54 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:parentTag="FrameLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:parentTag="android.support.design.internal.ForegroundLinearLayout"
     tools:background="@color/red_700_a50"
+    android:orientation="vertical"
     tools:layout_width="match_parent"
-    tools:layout_height="80dp">
+    tools:layout_height="wrap_content">
 
-    <com.lolchat.myanmarking.myanchat.base.view.SquareImageView
-        android:id="@+id/friendSummonerIcon"
-        android:src="@drawable/default_sum_icon"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="center_vertical"
-        android:adjustViewBounds="true"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        />
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginStart="80dp"
-        android:gravity="center|start"
-        android:layout_toStartOf="@+id/friendStatus"
-        android:layout_toEndOf="@+id/friendSummonerIcon">
-        <TextView
-            android:id="@+id/friendName"
-            tools:text="MyanMarkKing"
-            android:textStyle="bold"
-            android:fontFamily="@string/roboto_thin"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/white_87"
+        android:layout_height="90dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friendSummonerIcon"
+            android:src="@drawable/default_sum_icon"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/league_yellow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            />
+
+        <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginStart="80dp"
+            android:gravity="center|start">
+            <TextView
+                android:id="@+id/friendName"
+                tools:text="MyanMarkKing"
+                android:textStyle="bold"
+                android:fontFamily="@string/roboto_thin"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white_87"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/friendStatus"
+                tools:text="Chatting"
+                android:textColor="@color/league_blue"
+                android:layout_gravity="bottom|start"
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/presenceMode"
+            android:src="@drawable/ic_circle"
+            android:alpha="0.6"
+            android:layout_gravity="top|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:tintMode="src_atop"
+            tools:tint="@color/md_green_600"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="bottom|end">
+            <ImageView
+                android:id="@+id/leagueTierAndDivisionIcon"
+                android:src="@drawable/unknown"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/leagueTierAndDivisionIconText"
+                tools:text="Silver V"
+                android:textStyle="bold"
+                android:fontFamily="@string/roboto_thin"
+                android:textColor="@color/white_87"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/container"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingStart="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/playingChamp"
+            tools:src="@drawable/ic_cancel_black_24dp"
+            android:adjustViewBounds="true"
+            android:layout_width="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/playingMessage"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            tools:text="Playing as Kyle for 14 minutes"
+            android:fontFamily="@string/roboto_thin"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white_87"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
 
-        <TextView
-            android:id="@+id/friendStatus"
-            tools:text="Chatting"
-            android:background="@drawable/round_rect"
-            android:backgroundTint="@color/black_54"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginEnd="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
     </LinearLayout>
-
-
-
 </merge>

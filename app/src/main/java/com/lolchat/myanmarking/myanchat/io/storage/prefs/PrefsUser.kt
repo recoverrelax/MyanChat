@@ -1,19 +1,21 @@
-package com.lolchat.myanmarking.myanchat.io.prefs
+package com.lolchat.myanmarking.myanchat.io.storage.prefs
 
 import android.content.SharedPreferences
 import com.lolchat.myanmarking.myanchat.base.prefs.BasePref
 import com.lolchat.myanmarking.myanchat.io.enums.RiotServer
 import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
 import com.lolchat.myanmarking.myanchat.io.other.NO_INT
+import com.squareup.moshi.Moshi
 import timber.log.Timber
 
 class PrefsUser(
-        pref: SharedPreferences
-) : BasePref(pref) {
+        pref: SharedPreferences,
+        moshi: Moshi
+) : BasePref(pref, moshi) {
 
-    private val USERNAME = "PrefsUser.USERNAME"
-    private val PASSWORD = "PrefsUser.PASSWORD"
-    private val SERVER = "PrefsUser.SERVER"
+    private val USERNAME = "USERNAME"
+    private val PASSWORD = "PASSWORD"
+    private val SERVER = "SERVER"
 
     var username: String
         get() = get(USERNAME, EMPTY_STRING)

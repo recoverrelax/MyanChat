@@ -1,11 +1,10 @@
 package com.lolchat.myanmarking.myanchat.di.module
 
 import android.app.Application
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import com.lolchat.myanmarking.myanchat.di.scopes.MyAppScope
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
-import com.lolchat.myanmarking.myanchat.io.prefs.PrefsUser
+import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsUser
+import com.lolchat.myanmarking.myanchat.io.storage.room.RoomPersistentDb
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotChatManager
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotConnManager
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotRosterManager
@@ -28,11 +27,11 @@ class XmppModule {
 
     @Provides
     @MyAppScope
-    fun proviesIXmppManager(xmppManager: XmppManager): IXmppManager = xmppManager
+    fun providesIXmppManager(xmppManager: XmppManager): IXmppManager = xmppManager
 
     @Provides
     @MyAppScope
-    fun provideRosterManager(): RiotRosterManager = RiotRosterManager()
+    fun provideRosterManager(db: RoomPersistentDb): RiotRosterManager = RiotRosterManager(db)
 
     @Provides
     @MyAppScope

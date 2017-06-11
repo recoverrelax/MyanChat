@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#d50000</color>
-    <color name="colorPrimaryA">#c8d50000</color>
+    <color name="colorPrimaryA">#b4d50000</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="league_blue">#e60acbe6</color>
+    <color name="ripple_friend_color">#c80acbe6</color>
+    <color name="league_yellow">#e6c89b3c</color>
     <color name="white">#FFF</color>
+    <color name="white_245">#f5ffffff</color>
     <color name="white_87">#ddffffff</color>
     <color name="white_70">#b2ffffff</color>
     <color name="white_75">#96ffffff</color>

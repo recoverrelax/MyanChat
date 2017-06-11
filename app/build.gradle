@@ -30,7 +30,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "com.android.support:appcompat-v7:$support_library_version"
-    compile "com.android.support.constraint:constraint-layout:$constraint_layout"
+//    compile "com.android.support.constraint:constraint-layout:$constraint_layout"
+    compile "com.android.support:cardview-v7:$support_library_version"
     compile "com.android.support:design:$support_library_version"
     compile "com.jakewharton.timber:timber:$timber"
 
@@ -48,17 +49,35 @@ dependencies {
     compile "io.reactivex.rxjava2:rxandroid:$rx_android"
 
     compile "com.github.bumptech.glide:glide:$glide"
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    compile 'com.squareup.moshi:moshi:1.4.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.moshi:moshi:1.4.0'
+    compile 'com.squareup.retrofit2:converter-moshi:2.2.0'
+    compile "com.squareup.retrofit2:adapter-rxjava2:2.2.0"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
+    compile "android.arch.persistence.room:runtime:${archRoomVersion}"
+    kapt "android.arch.persistence.room:compiler:${archRoomVersion}"
+    compile "android.arch.persistence.room:rxjava2:${archRoomVersion}"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.15'
+    compile 'com.facebook.stetho:stetho:1.5.0'
 }
+
 buildscript {
-    ext.kotlin_version = '1.1.2-3'
-    ext.support_library_version = '25.3.1'
-    ext.anko_version = '0.9'
-    ext.constraint_layout = '1.0.2'
-    ext.timber = '4.5.1'
-    ext.smack = '4.2.0'
-    ext.rx_java = '2.1.0'
-    ext.rx_android = '2.0.1'
-    ext.glide = '3.7.0'
+    ext{
+        kotlin_version = '1.1.2-3'
+        support_library_version = '25.3.1'
+        anko_version = '0.9'
+        constraint_layout = '1.0.2'
+        timber = '4.5.1'
+        smack = '4.2.0'
+        rx_java = '2.1.0'
+        rx_android = '2.0.1'
+        glide = '3.7.0'
+        archRoomVersion = '1.0.0-alpha1'
+    }
 
     repositories {
         jcenter()
@@ -73,4 +92,9 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
     }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo' }
 }

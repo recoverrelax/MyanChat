@@ -9,6 +9,7 @@ object RiotApiConst{
     private val DDRAGON_ICON_POSTFIZ = "img/profileicon/"
 
     val DDRAGON_DEFAULT_PROFILE_IC = R.drawable.default_sum_icon
+    val DDRAGON_DEFAULT_NO_CHAMP = R.drawable.ic_cancel_black_24dp
 
     fun getProfileIconUrl(icon: String): String{
         return "$DDRAGON_ICON_URL$DDRAGON_VERSION$DDRAGON_ICON_POSTFIZ$icon$DDRAGON_ICON_EXT"

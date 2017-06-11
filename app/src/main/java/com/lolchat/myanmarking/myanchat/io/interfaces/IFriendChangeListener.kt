@@ -1,9 +1,7 @@
 package com.lolchat.myanmarking.myanchat.io.interfaces
 
-import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
 
 interface IFriendChangeListener {
-    fun onFriendsRemoved(friends: MutableList<Friend>)
-    fun onFriendsAdded(friends: MutableList<Friend>)
-    fun onFriendsChanged(friends: MutableList<Friend>)
+    fun onDataChanged(isFreshData: Boolean, friendEntityList: List<FriendEntity>)
 }

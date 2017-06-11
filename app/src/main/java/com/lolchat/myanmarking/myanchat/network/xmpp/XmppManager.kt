@@ -6,10 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
-import com.lolchat.myanmarking.myanchat.io.interfaces.IRosterManager
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
-import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
-import com.lolchat.myanmarking.myanchat.io.prefs.PrefsUser
+import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsUser
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -29,7 +27,7 @@ class XmppManager(
         val rosterManager: RiotRosterManager,
         val chatManager: RiotChatManager,
         val connManager: RiotConnManager
-): IXmppManager, IRosterManager {
+): IXmppManager {
 
     private val DEBUG: Boolean = true
     private var isBound = false
@@ -86,7 +84,7 @@ class XmppManager(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { conn ->
-                            rosterManager.init(conn, this)
+                            rosterManager.init(conn)
                             chatManager.init(conn)
                             connManager.init(conn)
                         },
@@ -124,23 +122,9 @@ class XmppManager(
         }
     }
 
-    override fun onRosterReady() {
-        isConnAndRosterReady.onNext(true)
-        isConnAndRosterReady.onComplete()
-    }
-
     private fun connectedAndAuthenticated(): Boolean{
         val xmppConn = this.xmppConn ?: return false
         return xmppConn.isConnected && xmppConn.isAuthenticated
-    }
-
-    override fun getFriendListName(): Observable<List<Friend>> {
-        return if(connectedAndAuthenticated() && rosterManager.hasInnitedFriendsList()){
-            rosterManager.getFriendListName()
-        }else{
-            isConnAndRosterReady
-                    .flatMap { rosterManager.getFriendListName() }
-        }
     }
 
     override fun addOnFriendChangeListener(listener: IFriendChangeListener){

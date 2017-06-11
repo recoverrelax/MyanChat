@@ -1,95 +1,96 @@
 package com.lolchat.myanmarking.myanchat.ui.adapter
 
-import android.app.Activity
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.transition.TransitionManager
 import android.view.ViewGroup
-import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IRecycleableView
-import com.lolchat.myanmarking.myanchat.io.model.item_view.FriendViewModel
-import com.lolchat.myanmarking.myanchat.io.model.item_view_interfaces.IFriendViewModel
-import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
-import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
+import com.lolchat.myanmarking.myanchat.io.model.item_view_interfaces.IFriendEntity
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
+import com.lolchat.myanmarking.myanchat.ui.fragment.FragFriendList.IFriendListManager
 import com.lolchat.myanmarking.myanchat.ui.view_item.FriendView
-import timber.log.Timber
+import org.jetbrains.anko.onClick
 
-class FragFriendListAdapter(
-        val act: Activity
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IFriendChangeListener {
-    private var friendList: MutableList<Friend> = mutableListOf()
+class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IFriendListManager {
+
+    private var friendList: List<FriendEntity> = emptyList()
     private val INFO_LOG = true
+    private var recyclerView: RecyclerView? = null
+
+    private var expandedItemTracker: MutableList<String> = mutableListOf()
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         holder as FriendListViewHolder
-        holder.setItem(getItem(position))
+        holder.setItem()
     }
 
     override fun getItemCount(): Int {
         return friendList.size
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return FriendListViewHolder(FriendView(parent.context, null, 0))
     }
 
-    fun setAdapterItems(friendList: List<Friend>) {
-        this.friendList = friendList.toMutableList()
+    override fun onFreshData(friendEntityList: List<FriendEntity>) {
+        this.friendList = friendEntityList
         notifyDataSetChanged()
     }
 
-    private fun getItem(adapterPosition: Int): Friend {
-        return friendList[adapterPosition]
+    override fun onDataChanged(result: DiffUtil.DiffResult?, friendEntityList: List<FriendEntity>) {
+        if(result == null){
+            this.friendList = friendEntityList
+            notifyDataSetChanged()
+        }else{
+            this.friendList = friendEntityList
+            result.dispatchUpdatesTo(this)
+        }
     }
-
 
     inner class FriendListViewHolder(itemView: FriendView) : RecyclerView.ViewHolder(itemView) {
-        fun setItem(item: Friend) {
-            itemView as IFriendViewModel
-            itemView.setItem(
-                    FriendViewModel(
-                            name = item.name,
-                            sumIconUrl = item.profileIcon,
-                            statusMessage = item.statusMessage,
-                            presenceStatus = "Chatting",
-                            isFriendOnline = item.isOnline,
-                            gameStatus = item.gameStatus
-                    )
-            )
-        }
-    }
+        fun setItem() {
+            val item = friendList[adapterPosition]
+            itemView as IFriendEntity
+            itemView.setItem(item)
 
-    override fun onFriendsRemoved(friends: MutableList<Friend>) {
-        act.runOnUiThread {
-            for (pos in friends.indices) {
-                val friend = friends[pos]
-                if (INFO_LOG) Timber.i("onFriendsRemoved: ${friend.name}")
-                friendList.remove(friend)
-                notifyItemRemoved(pos)
+            val collapseId = item.name
+
+            if (canExpand(friend = item) && isExpanded(itemName = collapseId)) {
+                itemView.expand()
+            }
+
+            itemView.onClick {
+                if (isExpanded(collapseId)) {
+                    TransitionManager.beginDelayedTransition(recyclerView)
+                    itemView.collapse()
+                    expandedItemTracker.remove(collapseId)
+                } else if (canExpand(friend = item)) {
+                    TransitionManager.beginDelayedTransition(recyclerView)
+                    expandedItemTracker.add(collapseId)
+                    itemView.expand()
+                }
             }
         }
     }
 
-    override fun onFriendsAdded(friends: MutableList<Friend>) {
-        act.runOnUiThread {
-            for (pos in friends.indices) {
-                val friend = friends[pos]
-                if (INFO_LOG) Timber.i("onFriendsAdded: ${friend.name}")
-                friendList.add(friend)
-                notifyItemInserted(pos)
-            }
-        }
+    private fun isExpanded(itemName: String): Boolean {
+        return expandedItemTracker.contains(itemName)
     }
 
-    override fun onFriendsChanged(friends: MutableList<Friend>) {
-        act.runOnUiThread {
-            @Suppress("LoopToCallChain")
-            for (pos in friends.indices) {
-                val friend = friends[pos]
-                friendList.removeAt(pos)
-                friendList.add(pos, friend)
-                notifyItemChanged(pos)
-            }
-        }
+    private fun canExpand(friend: FriendEntity): Boolean {
+        return friend.isOnlineInChampSelectOrPlaying()
     }
+
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         (holder.itemView as? IRecycleableView)?.onRecycle()

@@ -1,16 +1,15 @@
 package com.lolchat.myanmarking.myanchat
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.ServiceConnection
-import android.os.IBinder
 import timber.log.Timber
 import android.os.StrictMode
+import com.facebook.stetho.Stetho
 import com.lolchat.myanmarking.myanchat.di.component.DaggerMyAppComponent
 import com.lolchat.myanmarking.myanchat.di.component.MyAppComponent
 import com.lolchat.myanmarking.myanchat.di.module.MyAppModule
-import com.lolchat.myanmarking.myanchat.di.module.PrefsModule
-import com.lolchat.myanmarking.myanchat.io.prefs.PrefsUser
+import com.lolchat.myanmarking.myanchat.di.module.NetworkModule
+import com.lolchat.myanmarking.myanchat.di.module.StorageModule
+import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsUser
 import com.lolchat.myanmarking.myanchat.network.xmpp.XmppManager
 import javax.inject.Inject
 
@@ -39,6 +38,8 @@ class MyApp : Application() {
 
         // innit StrictMode
         if (DEBUG) {
+            Stetho.initializeWithDefaults(this)
+
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
@@ -54,18 +55,17 @@ class MyApp : Application() {
         // dagger init
         appComponent = DaggerMyAppComponent.builder()
                 .myAppModule(MyAppModule(this))
-                .prefsModule(PrefsModule())
+                .storageModule(StorageModule())
+                .networkModule(NetworkModule())
                 .build().apply { inject(this@MyApp) }
 
         dummyInitPrefs()
-
-        xmppManager.startAndBind(this)
     }
 
     private fun dummyInitPrefs() {
         if (!userPref.hasUsernamePref()) {
-            userPref.username = "valkyria3"
-            userPref.password = "ertyqwjm147741"
+            userPref.username = "
+            userPref.password = ""
         }
     }
 }

@@ -1,9 +1,14 @@
 package com.lolchat.myanmarking.myanchat.network.xmpp
 
+import com.lolchat.myanmarking.myanchat.io.enums.GameStatus
 import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
-import com.lolchat.myanmarking.myanchat.io.interfaces.IRosterManager
-import com.lolchat.myanmarking.myanchat.io.model.xmpp.Friend
-import io.reactivex.Observable
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.ChampionId
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
+import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
+import com.lolchat.myanmarking.myanchat.io.storage.room.RoomPersistentDb
+import com.lolchat.myanmarking.myanchat.io.storage.room.model.ChampionBasic
+import com.lolchat.myanmarking.myanchat.other.parser.RiotXmlParser
+import io.reactivex.Flowable
 import io.reactivex.schedulers.Schedulers
 import org.jivesoftware.smack.AbstractXMPPConnection
 import org.jivesoftware.smack.packet.Presence
@@ -11,131 +16,148 @@ import org.jivesoftware.smack.roster.Roster
 import org.jivesoftware.smack.roster.RosterEntries
 import org.jivesoftware.smack.roster.RosterEntry
 import org.jivesoftware.smack.roster.RosterListener
+import org.jxmpp.jid.BareJid
 import org.jxmpp.jid.Jid
 import timber.log.Timber
 
-class RiotRosterManager : RosterListener, RosterEntries {
+class RiotRosterManager(
+        val db: RoomPersistentDb
+) : RosterListener, RosterEntries {
 
     private val INFO_ENABLED = true
-    private val friendList: MutableMap<Jid, Friend> = hashMapOf()
-    private var initedFriendsList: Boolean = false
+    private val friendList: MutableMap<String, FriendEntity> = hashMapOf()
+    private var initialized: Boolean = false
     private lateinit var roster: Roster
-    private var callback: IRosterManager? = null
 
+    private val champListMap: HashMap<Int, ChampionId> = hashMapOf()
     private val changeListener: MutableList<IFriendChangeListener> = mutableListOf()
 
-    fun init(conn: AbstractXMPPConnection, callback: IRosterManager) {
+    fun init(conn: AbstractXMPPConnection) {
         if (!(conn.isConnected && conn.isAuthenticated))
             throw IllegalStateException()
-        this.callback = callback
-        this.roster = Roster.getInstanceFor(conn)
-        roster.getEntriesAndAddListener(this, this)
+
+        initChampListName()
+                .subscribe(
+                        {
+                            champListMap.putAll(
+                                    it.associateBy(
+                                            { it.id },
+                                            { ChampionId(it.name, it.key) }
+                                    ))
+
+                            this.roster = Roster.getInstanceFor(conn)
+                            roster.getEntriesAndAddListener(this, this)
+                        },
+                        { Timber.e(it)}
+                )
     }
 
-    override fun rosterEntries(rosterEntries: MutableCollection<RosterEntry>) {
-        rosterEntries.forEach { entry ->
-            val jid = entry.jid
+    fun initChampListName(): Flowable<List<ChampionBasic>> {
+        return db.championBasicDao().getAllChamps()
+                .onErrorReturn {
+                    Timber.e(it)
+                    emptyList()
+                }
+                .subscribeOn(Schedulers.computation())
+    }
 
-            if (!friendList.containsKey(jid)) {
-                friendList.put(jid, Friend(entry.name, roster.getPresence(jid)))
+    // initial fetch
+    override fun rosterEntries(rosterEntries: MutableCollection<RosterEntry>) {
+        // we clear the map just in case
+        friendList.clear()
+
+        rosterEntries.forEach { entry ->
+            val presence = getPresence(entry.jid.asBareJid())
+            val name = entry.name
+
+            if (presence.from != null) {
+                friendList.put(
+                        name,
+                        getFriendEntityFromPresence(presence, name)
+                )
             }
         }
-        this.callback?.onRosterReady()
-        this.callback = null
-        this.initedFriendsList = true
+        notifyListenersDataChange(true)
+        this.initialized = true
     }
 
-    fun hasInnitedFriendsList(): Boolean = initedFriendsList
+    private fun getPresence(jid: BareJid): Presence = roster.getPresence(jid)
+    private fun getEntry(jid: BareJid): RosterEntry = roster.getEntry(jid)
+    private fun getChampionNameForId(champId: Int): ChampionId {
+        val champName = champListMap[champId]
+        return champName ?: ChampionId(EMPTY_STRING, EMPTY_STRING)
+    }
+    private fun getFriendEntityFromPresence(presence: Presence, name: String): FriendEntity{
+        val rootElement = RiotXmlParser.buildCustomAttrFromStatusMessage(presence)
+        val champId: Int = RiotXmlParser.getChampionId(rootElement)
+        val gameStatus: GameStatus = RiotXmlParser.getGameStatus(rootElement)
+        val champName: ChampionId = getChampionNameForId(champId)
+        val isOnline = presence.isAvailable
 
-    fun getFriendListName(): Observable<List<Friend>> {
-        return Observable.fromCallable {
-            friendList
-                    .map { it.value }
-                    .sortedBy {
-                        if (it.presence.isAvailable) 0
-                        else 1
-                    }
-                    .toList()
-        }.subscribeOn(Schedulers.io())
+        return  FriendEntity(
+                name,
+                RiotXmlParser.getProfileIcon(rootElement),
+                RiotXmlParser.getStatusMessage(rootElement),
+                isOnline,
+                gameStatus,
+                RiotXmlParser.getPresenceMode(rootElement, presence),
+                RiotXmlParser.getRankedLeagueTierAnddivision(rootElement, presence),
+                RiotXmlParser.getPlayingData(rootElement, champName, gameStatus, isOnline)
+        )
     }
 
     override fun entriesDeleted(addresses: MutableCollection<Jid>) {
-        if(INFO_ENABLED) Timber.i("entriesDeleted: $addresses")
-        val deletedEntries: MutableList<Friend> = mutableListOf()
-
         addresses.forEach { jid ->
-            val friend = friendList.remove(jid)
-            if(friend != null){
-                deletedEntries.add(friend)
-            }
+            val entry = getEntry(jid.asBareJid())
+            friendList.remove(entry.name)
         }
-        changeListener.forEach { it.onFriendsRemoved(deletedEntries) }
+        notifyListenersDataChange(false)
     }
-
     override fun entriesAdded(addresses: MutableCollection<Jid>) {
-        if(INFO_ENABLED) Timber.i("entriesAdded: $addresses")
-        val addedEntries: MutableList<Friend> = mutableListOf()
-
         addresses.forEach { jid ->
-            val entry = roster.getEntry(jid.asBareJid())
-            val bestPresence = roster.getPresence(jid.asBareJid())
-
-            if (!friendList.containsKey(jid)) {
-                val friend = Friend(entry.name, bestPresence)
-                friendList.put(jid, friend)
-                addedEntries.add(friend)
-            }
+            val entry = getEntry(jid.asBareJid())
+            val newPresence = getPresence(jid.asBareJid())
+            val name = entry.name
+            friendList.put(name, getFriendEntityFromPresence(newPresence, name))
         }
-        changeListener.forEach { it.onFriendsRemoved(addedEntries) }
+        notifyListenersDataChange(false)
     }
 
     override fun entriesUpdated(addresses: MutableCollection<Jid>) {
-        if(INFO_ENABLED) Timber.i("entriesUpdated: $addresses")
-        val updatedEntries: MutableList<Friend> = mutableListOf()
-
         addresses.forEach { jid ->
-            val entry = roster.getEntry(jid.asBareJid())
-            val bestPresence = roster.getPresence(jid.asBareJid())
-
-            if (friendList.containsKey(jid)) {
-                friendList.remove(jid)
-            }
-            val friend = Friend(entry.name, bestPresence)
-            friendList.put(jid, friend)
-            updatedEntries.add(friend)
+            val entry = getEntry(jid as BareJid)
+            val presence = getPresence(jid)
+            val name = entry.name
+            friendList.put(name, getFriendEntityFromPresence(presence, entry.name))
         }
-        changeListener.forEach { it.onFriendsChanged(updatedEntries) }
+        notifyListenersDataChange(false)
     }
-
     override fun presenceChanged(presence: Presence) {
-        if(INFO_ENABLED) Timber.i("presenceChanged: $presence")
-        val updatedEntries: MutableList<Friend> = mutableListOf()
+        val entry = getEntry(presence.from.asBareJid())
+        val freshPresence = getPresence(presence.from.asBareJid())
+        val name = entry.name
 
-        val jid = presence.from.asBareJid()
-
-        val entry = roster.getEntry(jid).name
-        val bestPresence = roster.getPresence(jid)
-
-        if (friendList.containsKey(jid)) {
-            val friend = Friend(
-                    entry,
-                    bestPresence
-            )
-            friendList[jid] = friend
-            updatedEntries.add(friend)
-        }
-        changeListener.forEach { it.onFriendsChanged(updatedEntries) }
+        friendList.put(name, getFriendEntityFromPresence(freshPresence, name))
+        notifyListenersDataChange(false)
     }
 
-    fun addOnFriendChangeListener(listener: IFriendChangeListener){
-        if(this.changeListener.contains(listener)){
+    private fun notifyListenersDataChange(isFreshData: Boolean) {
+        val friendEntityList = friendList.map { it.value }
+        changeListener.forEach { it.onDataChanged(isFreshData, friendEntityList) }
+    }
+
+    fun addOnFriendChangeListener(listener: IFriendChangeListener) {
+        if (this.changeListener.contains(listener)) {
             throw IllegalStateException("This Listener was already added")
         }
         this.changeListener.add(listener)
+        if (initialized) {
+            notifyListenersDataChange(true)
+        }
     }
 
-    fun removeOnFriendChangeListener(listener: IFriendChangeListener){
-        if(!this.changeListener.contains(listener)){
+    fun removeOnFriendChangeListener(listener: IFriendChangeListener) {
+        if (!this.changeListener.contains(listener)) {
             throw IllegalStateException("This Listener was already removed")
         }
         this.changeListener.remove(listener)
