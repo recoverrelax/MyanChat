@@ -64,8 +64,8 @@ class MyApp : Application() {
 
     private fun dummyInitPrefs() {
         if (!userPref.hasUsernamePref()) {
-            userPref.username = "valkyria3"
-            userPref.password = "ertyqwjm147741"
+            userPref.username = ""
+            userPref.password = ""
         }
     }
 }
