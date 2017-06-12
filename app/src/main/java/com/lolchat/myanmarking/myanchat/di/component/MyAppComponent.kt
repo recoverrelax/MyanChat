@@ -8,8 +8,7 @@ import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
 import com.lolchat.myanmarking.myanchat.io.other.DynamicUrlBuilder
 import com.lolchat.myanmarking.myanchat.io.storage.room.RoomPersistentDb
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotXmppService
-import com.lolchat.myanmarking.myanchat.network.xmpp.XmppManager
-import com.lolchat.myanmarking.myanchat.ui.activity.EntryActivity
+import com.lolchat.myanmarking.myanchat.ui.activity.MainActivity
 import com.lolchat.myanmarking.myanchat.ui.view_item.FriendView
 import dagger.Component
 
@@ -24,7 +23,7 @@ import dagger.Component
 interface MyAppComponent{
     fun inject(app: MyApp)
     fun inject(service: RiotXmppService)
-    fun inject(entryActivity: EntryActivity)
+    fun inject(mainActivity: MainActivity)
 
     fun inject(view: FriendView)
 

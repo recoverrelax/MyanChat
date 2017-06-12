@@ -2,6 +2,10 @@ package com.lolchat.myanmarking.myanchat.ui.view_item
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.ColorFilter
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Matrix
 import android.support.design.internal.ForegroundLinearLayout
 import android.util.AttributeSet
 import android.view.View
@@ -56,6 +60,8 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
     private var timeStampDisposable: Disposable? = null
     private set
 
+    private val greyColorFilter: ColorMatrixColorFilter
+
     @Suppress("ConvertSecondaryConstructorToPrimary")
     @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
@@ -64,6 +70,8 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
         orientation = LinearLayout.VERTICAL
         val dp10 = dip(10)
         setPadding(dp10, dp10, dp10, dp10)
+
+        greyColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
 
         friendSummonerIcon = find(R.id.friendSummonerIcon)
         friendName = find(R.id.friendName)
@@ -118,8 +126,8 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
                     .error(RiotApiConst.DDRAGON_DEFAULT_PROFILE_IC)
                     .into(friendSummonerIcon)
         } else {
-            Glide.with(context)
             friendSummonerIcon.setImageDrawable(drawableFromRes(RiotApiConst.DDRAGON_DEFAULT_PROFILE_IC))
+            friendSummonerIcon.colorFilter = if(viewModel.isFriendOnline) null else greyColorFilter
         }
     }
 
@@ -218,6 +226,7 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
 
     override fun onRecycle() {
         collapse()
+        friendSummonerIcon.colorFilter = null
         timeStampDisposable?.dispose()
     }
 

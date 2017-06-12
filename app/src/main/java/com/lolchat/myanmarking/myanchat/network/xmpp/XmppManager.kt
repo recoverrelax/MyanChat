@@ -35,11 +35,8 @@ class XmppManager(
     private lateinit var mService: RiotXmppService
     private var xmppConn: AbstractXMPPConnection? = null
 
-    private val isConnAndRosterReady: PublishSubject<Boolean> = PublishSubject.create<Boolean>()
-
     private val SERVER_PORT = 5223
     private val SERVER_DOMAIN = "pvp.net"
-    private val MAX_CONNECTION_TRIES = 4
 
     fun isServiceRunning(): Boolean = RiotXmppService.isRunning
 
@@ -81,7 +78,6 @@ class XmppManager(
                 .flatMap { login(it) }
                 .delay(500, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { conn ->
                             rosterManager.init(conn)

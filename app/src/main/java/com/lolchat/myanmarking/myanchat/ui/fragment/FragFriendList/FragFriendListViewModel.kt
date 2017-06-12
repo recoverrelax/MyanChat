@@ -32,12 +32,12 @@ class FragFriendListViewModel(
     private fun List<FriendEntity>.sortFriendEntity(): List<FriendEntity> {
         return this.sortedWith(
                 compareBy(
-                        { !it.isFriendOnline },
+                        { it.isFriendOnline },
                         { it.presenceMode },
                         { it.gameStatus },
                         { it.name }
                 )
-        )
+        ).reversed()
     }
 
     override fun onCleared() {

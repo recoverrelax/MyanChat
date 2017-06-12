@@ -20,4 +20,8 @@
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
     </style>
+
+    <style name="AppTheme.Entry">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
 </resources>
