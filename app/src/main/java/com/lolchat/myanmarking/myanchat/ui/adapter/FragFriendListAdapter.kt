@@ -1,6 +1,5 @@
 package com.lolchat.myanmarking.myanchat.ui.adapter
 
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
 import android.view.ViewGroup
@@ -47,14 +46,9 @@ class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), I
         notifyDataSetChanged()
     }
 
-    override fun onDataChanged(result: DiffUtil.DiffResult?, friendEntityList: List<FriendEntity>) {
-        if(result == null){
-            this.friendList = friendEntityList
-            notifyDataSetChanged()
-        }else{
-            this.friendList = friendEntityList
-            result.dispatchUpdatesTo(this)
-        }
+    override fun onDataChanged(friendEntityList: List<FriendEntity>) {
+        this.friendList = friendEntityList
+        notifyDataSetChanged()
     }
 
     inner class FriendListViewHolder(itemView: FriendView) : RecyclerView.ViewHolder(itemView) {

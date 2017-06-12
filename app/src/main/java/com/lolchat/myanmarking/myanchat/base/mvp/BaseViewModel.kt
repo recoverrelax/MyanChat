@@ -1,28 +1,24 @@
 package com.lolchat.myanmarking.myanchat.base.mvp
 
+import android.arch.lifecycle.ViewModel
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BasePresenter<T : IMvpView> : Presenter<T> {
+abstract class BaseViewModel<S: BaseViewStates>: ViewModel() {
 
     private val lazyCompositeSubscription = lazy { CompositeDisposable() }
     protected val subscriptions: CompositeDisposable by lazyCompositeSubscription
 
-    lateinit var view: T
-    private set
+    val viewState: PublishRelay<S> = PublishRelay.create()
 
-    private var isViewAttached: Boolean = false
-
-    override fun attachView(mvpView: T) {
-        view = mvpView
-        isViewAttached = true
-    }
-
-    override fun detachView() {
+    override fun onCleared() {
+        super.onCleared()
         if (lazyCompositeSubscription.isInitialized()) {
             subscriptions.clear()
         }
-        isViewAttached = false
     }
 
-    override fun isViewAttached() = isViewAttached
+    open fun postEvent(event: S){
+        viewState.accept(event)
+    }
 }

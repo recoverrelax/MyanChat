@@ -162,4 +162,12 @@ class RiotRosterManager(
         }
         this.changeListener.remove(listener)
     }
+
+    fun onFreshDataRequested() {
+        if(initialized){
+            notifyListenersDataChange(true)
+        }else{
+            Timber.e("You requested fresh Data before the RosterManager is ready")
+        }
+    }
 }

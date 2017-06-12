@@ -122,6 +122,9 @@ class XmppManager(
         }
     }
 
+    override fun requestFreshData()
+            = rosterManager.onFreshDataRequested()
+
     private fun connectedAndAuthenticated(): Boolean{
         val xmppConn = this.xmppConn ?: return false
         return xmppConn.isConnected && xmppConn.isAuthenticated

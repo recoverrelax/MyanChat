@@ -35,6 +35,10 @@ inline fun View.setVisible(){
     this.visibility = View.VISIBLE
 }
 
+inline fun View.setInvisible(){
+    this.visibility = View.INVISIBLE
+}
+
 inline fun View.setVisibleIf(){
     if(this.visibility != View.VISIBLE){
         this.visibility = View.VISIBLE

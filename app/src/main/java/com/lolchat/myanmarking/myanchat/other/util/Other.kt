@@ -1,5 +1,6 @@
 package com.lolchat.myanmarking.myanchat.other.util
 
+import com.lolchat.myanmarking.myanchat.BuildConfig
 import com.squareup.moshi.Moshi
 import io.reactivex.disposables.Disposable
 
@@ -14,3 +15,9 @@ inline fun <reified T>Moshi.fromJson(value: String): T{
 }
 
 inline fun Disposable?.isNotDisposed() = this != null && !this.isDisposed
+
+inline fun inDebug(doInDebug: () -> Unit){
+    if(BuildConfig.DEBUG){
+        doInDebug.invoke()
+    }
+}
