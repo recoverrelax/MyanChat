@@ -9,8 +9,11 @@ import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
 import com.lolchat.myanmarking.myanchat.ui.fragment.FragFriendList.IFriendListManager
 import com.lolchat.myanmarking.myanchat.ui.view_item.FriendView
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.onLongClick
 
-class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IFriendListManager {
+class FragFriendListAdapter(
+        val longClickListener: OnFriendLongClickListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), IFriendListManager {
 
     private var friendList: List<FriendEntity> = emptyList()
     private val INFO_LOG = true
@@ -38,7 +41,7 @@ class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), I
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return FriendListViewHolder(FriendView(parent.context, null, 0))
+        return FriendListViewHolder(FriendView(parent.context, null, 0), longClickListener)
     }
 
     override fun onFreshData(friendEntityList: List<FriendEntity>) {
@@ -51,9 +54,22 @@ class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), I
         notifyDataSetChanged()
     }
 
-    inner class FriendListViewHolder(itemView: FriendView) : RecyclerView.ViewHolder(itemView) {
+    inner class FriendListViewHolder(itemView: FriendView, longClickListener: OnFriendLongClickListener) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.onLongClick {
+                val item = getFriend(adapterPosition)
+                if (item.isFriendOnline) {
+                    longClickListener.onFriendLongClick(item.name, adapterPosition)
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+
         fun setItem() {
-            val item = friendList[adapterPosition]
+            val item = getFriend(adapterPosition)
             itemView as IFriendEntity
             itemView.setItem(item)
 
@@ -75,6 +91,9 @@ class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), I
                 }
             }
         }
+
+        private fun getFriend(position: Int): FriendEntity
+            = friendList[position]
     }
 
     private fun isExpanded(itemName: String): Boolean {
@@ -89,4 +108,8 @@ class FragFriendListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), I
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         (holder.itemView as? IRecycleableView)?.onRecycle()
     }
+}
+
+interface OnFriendLongClickListener {
+    fun onFriendLongClick(friendName: String, position: Int)
 }

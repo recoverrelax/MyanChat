@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingTop="40dp"
+    android:paddingBottom="40dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:background="@color/friend_option_bs_bg"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            android:src="@drawable/ic_matches"
+            android:tint="@color/white"
+            android:tintMode="src_atop"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:text="@string/friendview_bs_options_matches"
+            android:textColor="@color/league_yellow_letter"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginStart="40dp"
+        android:orientation="vertical">
+        <ImageView
+            android:src="@drawable/ic_chat_black_24dp"
+            android:tint="@color/white"
+            android:tintMode="src_atop"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <TextView
+            android:text="@string/friendview_bs_options_chat"
+            android:textColor="@color/league_yellow_letter"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

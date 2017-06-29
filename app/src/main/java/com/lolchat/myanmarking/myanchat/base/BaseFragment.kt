@@ -1,5 +1,6 @@
 package com.lolchat.myanmarking.myanchat.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import com.lolchat.myanmarking.myanchat.base.mvp.BaseViewModel
 import com.lolchat.myanmarking.myanchat.base.mvp.BaseViewStates
 import com.lolchat.myanmarking.myanchat.di.component.MyAppComponent
 import com.lolchat.myanmarking.myanchat.other.util.inDebug
+import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
@@ -24,7 +26,6 @@ abstract class BaseFragment<M : BaseViewModel<S>, S : BaseViewStates> : Fragment
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
         val view = inflater.inflate(layoutRes, container, false)
-        injectComponent(MyApp.INSTANCE.appComponent)
         return view
     }
 
@@ -44,11 +45,15 @@ abstract class BaseFragment<M : BaseViewModel<S>, S : BaseViewStates> : Fragment
                 )
     }
 
+    override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
+
     override fun onPause() {
         super.onPause()
         stateDisposable?.dispose()
     }
 
-    abstract fun injectComponent(appComponent: MyAppComponent)
     abstract fun render(viewState: S)
 }

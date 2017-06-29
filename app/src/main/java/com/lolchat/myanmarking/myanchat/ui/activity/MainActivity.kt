@@ -2,9 +2,8 @@ package com.lolchat.myanmarking.myanchat.ui.activity
 
 import android.app.Application
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import com.lolchat.myanmarking.myanchat.MyApp
 import com.lolchat.myanmarking.myanchat.R
+import com.lolchat.myanmarking.myanchat.base.BaseActivity
 import com.lolchat.myanmarking.myanchat.io.model.json.JChampionList
 import com.lolchat.myanmarking.myanchat.io.model.json.RealmDto
 import com.lolchat.myanmarking.myanchat.io.network.ApiServiceImpl
@@ -13,14 +12,16 @@ import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsRiotApi
 import com.lolchat.myanmarking.myanchat.io.storage.room.RoomInteractor
 import com.lolchat.myanmarking.myanchat.io.storage.room.model.ChampionBasic
 import com.lolchat.myanmarking.myanchat.network.xmpp.XmppManager
-import com.lolchat.myanmarking.myanchat.ui.fragment.FragFriendList.FragFriendList
+import com.lolchat.myanmarking.myanchat.ui.fragment.FragFriendMatchList.FragFriendList
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+
+    override val layoutRes: Int = R.layout.act_main
 
     @Inject lateinit var apiServiceImpl: ApiServiceImpl
     @Inject lateinit var prefsRiot: PrefsRiotApi
@@ -30,7 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.act_main)
 
         if (savedInstanceState == null) {
             val frag = FragFriendList.newInstance()
@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .add(R.id.container, frag).commit()
         }
-
-        MyApp.INSTANCE.appComponent.inject(this)
 
         val versions: Observable<List<String>>
                 = apiServiceImpl.getVersions()

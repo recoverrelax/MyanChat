@@ -4,6 +4,7 @@ import com.lolchat.myanmarking.myanchat.base.mvp.BaseViewModel
 import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
+import com.lolchat.myanmarking.myanchat.ui.adapter.OnFriendLongClickListener
 
 class FragFriendListViewModel(
         val xmppManager: IXmppManager

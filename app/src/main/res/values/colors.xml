@@ -8,6 +8,7 @@
     <color name="league_blue">#e60acbe6</color>
     <color name="ripple_friend_color">#c80acbe6</color>
     <color name="league_yellow">#e6c89b3c</color>
+    <color name="league_yellow_letter">#CBBC90</color>
     <color name="white">#FFF</color>
     <color name="white_245">#f5ffffff</color>
     <color name="white_87">#ddffffff</color>
@@ -25,6 +26,7 @@
     <color name="black_190">#be000000</color>
     <color name="black_38">#5f000000</color>
     <color name="black_54">#8A000000</color>
+    <color name="friend_option_bs_bg">#1E2328</color>
 
     <color name="online_item_bg">#96388e3c</color>
     <color name="offline_item_bg">#96d32f2f</color>

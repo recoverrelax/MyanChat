@@ -5,10 +5,12 @@ import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.ChampionId
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
 import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
+import com.lolchat.myanmarking.myanchat.io.storage.room.RoomInteractor
 import com.lolchat.myanmarking.myanchat.io.storage.room.RoomPersistentDb
 import com.lolchat.myanmarking.myanchat.io.storage.room.model.ChampionBasic
 import com.lolchat.myanmarking.myanchat.other.parser.RiotXmlParser
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import org.jivesoftware.smack.AbstractXMPPConnection
 import org.jivesoftware.smack.packet.Presence
@@ -21,7 +23,7 @@ import org.jxmpp.jid.Jid
 import timber.log.Timber
 
 class RiotRosterManager(
-        val db: RoomPersistentDb
+        val dbInteractor: RoomInteractor
 ) : RosterListener, RosterEntries {
 
     private val INFO_ENABLED = true
@@ -52,8 +54,8 @@ class RiotRosterManager(
                 )
     }
 
-    fun initChampListName(): Flowable<List<ChampionBasic>> {
-        return db.championBasicDao().getAllChamps()
+    fun initChampListName(): Observable<List<ChampionBasic>> {
+        return dbInteractor.getAllChamp()
                 .onErrorReturn {
                     Timber.e(it)
                     emptyList()

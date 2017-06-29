@@ -38,6 +38,7 @@ import org.jetbrains.anko.layoutInflater
 import timber.log.Timber
 import java.sql.Timestamp
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
@@ -56,7 +57,7 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
     private var collapsableState = Collapsable.COLLAPSED
     private var viewModel: FriendEntity = FriendEntity.EMPTY
 
-    private val uriBuilder: DynamicUrlBuilder
+    @Inject lateinit var uriBuilder: DynamicUrlBuilder
     private var timeStampDisposable: Disposable? = null
     private set
 
@@ -86,7 +87,7 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
         foreground = context.getSystemRes(android.R.attr.selectableItemBackgroundBorderless)
         isClickable = true
 
-        uriBuilder = MyApp.INSTANCE.appComponent.urlBuilder()
+        MyApp.INSTANCE.appComponent.inject(this)
     }
 
     override fun setItem(viewModel: FriendEntity) {

@@ -11,21 +11,26 @@ import com.lolchat.myanmarking.myanchat.network.xmpp.RiotXmppService
 import com.lolchat.myanmarking.myanchat.ui.activity.MainActivity
 import com.lolchat.myanmarking.myanchat.ui.view_item.FriendView
 import dagger.Component
+import dagger.Module
+import dagger.Provides
+import dagger.android.AndroidInjectionModule
 
 @MyAppScope
 @Component(modules = arrayOf(
-        MyAppModule::class,
+        MyAppComponent.MyAppModule::class,
+        AndroidInjectionModule::class,
         StorageModule::class,
         XmppModule::class,
-        NetworkModule::class
+        NetworkModule::class,
+        ActivityBindModule::class
 )
 )
-interface MyAppComponent{
+interface MyAppComponent {
     fun inject(app: MyApp)
     fun inject(service: RiotXmppService)
-    fun inject(mainActivity: MainActivity)
 
     fun inject(view: FriendView)
+    /*fun inject(mainActivity: MainActivity)
 
     // providers
 
@@ -33,5 +38,23 @@ interface MyAppComponent{
     fun urlBuilder(): DynamicUrlBuilder
 
     fun app(): Application
-    fun roomDb(): RoomPersistentDb
+    fun roomDb(): RoomPersistentDb*/
+
+    @Module
+    class MyAppModule(
+            val context: MyApp
+    ) {
+
+        @Provides
+        @MyAppScope
+        fun provideApplication(): Application {
+            return context
+        }
+
+        @Provides
+        @MyAppScope
+        fun provideDaggerApplication(): MyApp {
+            return context
+        }
+    }
 }

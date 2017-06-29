@@ -14,4 +14,6 @@
     <string name="friendview_playing_as_def">Playing as ? for ? minutes</string>
     <string name="friendview_champ_select">In Champ Select for %1$d minutes</string>
     <string name="friendview_champ_select_def">In Champ Select for ? minutes</string>
+    <string name="friendview_bs_options_matches">Matches</string>
+    <string name="friendview_bs_options_chat">Chat</string>
 </resources>
