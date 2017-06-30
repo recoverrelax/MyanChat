@@ -2,13 +2,15 @@ package com.lolchat.myanmarking.myanchat.di.component
 
 import android.app.Application
 import com.lolchat.myanmarking.myanchat.MyApp
-import com.lolchat.myanmarking.myanchat.di.module.*
+import com.lolchat.myanmarking.myanchat.di.module.ActivityBindModule
+import com.lolchat.myanmarking.myanchat.di.module.NetworkModule
+import com.lolchat.myanmarking.myanchat.di.module.StorageModule
+import com.lolchat.myanmarking.myanchat.di.module.XmppModule
 import com.lolchat.myanmarking.myanchat.di.scopes.MyAppScope
-import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
-import com.lolchat.myanmarking.myanchat.io.other.DynamicUrlBuilder
-import com.lolchat.myanmarking.myanchat.io.storage.room.RoomPersistentDb
+import com.lolchat.myanmarking.myanchat.io.Riot.RiotApiConst
+import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsRiotApi
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotXmppService
-import com.lolchat.myanmarking.myanchat.ui.activity.MainActivity
+import com.lolchat.myanmarking.myanchat.other.Navigator
 import com.lolchat.myanmarking.myanchat.ui.view_item.FriendView
 import dagger.Component
 import dagger.Module
@@ -55,6 +57,18 @@ interface MyAppComponent {
         @MyAppScope
         fun provideDaggerApplication(): MyApp {
             return context
+        }
+
+        @Provides
+        @MyAppScope
+        fun provideNavigator(): Navigator {
+            return Navigator()
+        }
+
+        @Provides
+        @MyAppScope
+        fun provideRiotApiConst(appPrefs: PrefsRiotApi): RiotApiConst {
+            return RiotApiConst(appPrefs)
         }
     }
 }

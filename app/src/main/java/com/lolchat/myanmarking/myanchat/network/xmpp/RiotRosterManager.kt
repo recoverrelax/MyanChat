@@ -78,6 +78,7 @@ class RiotRosterManager(
                         getFriendEntityFromPresence(presence, name)
                 )
             }
+            Timber.i(":oo ${presence.toString()}")
         }
         notifyListenersDataChange(true)
         this.initialized = true
@@ -96,7 +97,8 @@ class RiotRosterManager(
         val champName: ChampionId = getChampionNameForId(champId)
         val isOnline = presence.isAvailable
 
-        return  FriendEntity(
+        return FriendEntity(
+                presence.from.asBareJid().toString(),
                 name,
                 RiotXmlParser.getProfileIcon(rootElement),
                 RiotXmlParser.getStatusMessage(rootElement),
@@ -104,7 +106,8 @@ class RiotRosterManager(
                 gameStatus,
                 RiotXmlParser.getPresenceMode(rootElement, presence),
                 RiotXmlParser.getRankedLeagueTierAnddivision(rootElement, presence),
-                RiotXmlParser.getPlayingData(rootElement, champName, gameStatus, isOnline)
+                RiotXmlParser.getPlayingData(rootElement, champName, gameStatus, isOnline),
+                RiotXmlParser.getSkinInfo(rootElement)
         )
     }
 
@@ -170,6 +173,14 @@ class RiotRosterManager(
             notifyListenersDataChange(true)
         }else{
             Timber.e("You requested fresh Data before the RosterManager is ready")
+        }
+    }
+
+    fun getUpdatedFriendEntityByName(friendName: String): FriendEntity? {
+        return if(friendList.containsKey(friendName)){
+            friendList[friendName]
+        }else{
+            null
         }
     }
 }

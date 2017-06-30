@@ -16,10 +16,10 @@ abstract class FragmentBindModule {
     @Binds
     @IntoMap
     @FragmentKey(FragFriendList::class)
-    internal abstract fun bindSharedFragmentInjectorFactory(builder: FragFriendListComponent.Builder): AndroidInjector.Factory<out Fragment>
+    internal abstract fun bindFragFriendList(builder: FragFriendListComponent.Builder): AndroidInjector.Factory<out Fragment>
 
     @Binds
     @IntoMap
     @FragmentKey(FragFriendMatchList::class)
-    internal abstract fun bindSharedFragmentInjectorFactory(builder: FragFriendMatchListComponent.Builder): AndroidInjector.Factory<out Fragment>
+    internal abstract fun bindFragFriendMatchList(builder: FragFriendMatchListComponent.Builder): AndroidInjector.Factory<out Fragment>
 }

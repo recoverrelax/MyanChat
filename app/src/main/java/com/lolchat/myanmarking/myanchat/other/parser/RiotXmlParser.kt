@@ -5,6 +5,7 @@ import com.lolchat.myanmarking.myanchat.io.enums.PresenceMode
 import com.lolchat.myanmarking.myanchat.io.enums.RankedLeagueTierDivision
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.ChampionId
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.PlayingData
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.SkinInfo
 import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
 import org.jivesoftware.smack.packet.Presence
 import org.w3c.dom.Document
@@ -29,6 +30,8 @@ class RiotXmlParser {
         const val GAME_QUEUE_TYPE = "gameQueueType"
         const val CHAMPION_ID = "championId"
         const val TIMESTAMP = "timeStamp"
+        const val SKINVARIANT = "skinVariant"
+        const val SKINNAME = "skinname"
 
         fun getProfileIcon(rootElement: Element?): String
                 = getStringFromXmlTag(RiotXmlParser.PROFILE_ICON, rootElement)
@@ -58,6 +61,19 @@ class RiotXmlParser {
                 return PlayingData(gameStatus, champ, getTime(rootElement))
             }
             return null
+        }
+
+        fun getSkinInfo(rootElement: Element?): SkinInfo?{
+            if(rootElement == null) return null
+
+            val skinName = RiotXmlParser.getStringFromXmlTag(SKINNAME, rootElement)
+            val skinVariant = RiotXmlParser.getStringFromXmlTag(SKINVARIANT, rootElement)
+
+            if(skinName == EMPTY_STRING){
+                return null
+            }else{
+                return SkinInfo(skinName, skinVariant)
+            }
         }
 
         fun getChampionId(rootElement: Element?): Int{

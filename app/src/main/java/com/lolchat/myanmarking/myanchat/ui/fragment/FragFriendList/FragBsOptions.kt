@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.lolchat.myanmarking.myanchat.R
 import com.lolchat.myanmarking.myanchat.base.BaseBottomSheet
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
+import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
+import com.lolchat.myanmarking.myanchat.other.Navigator
+import kotlinx.android.synthetic.main.frag_friend_bs_options.view.*
 
 /*
 BsFitnessItemDetailed().show(act.supportFragmentManager,
@@ -15,39 +19,17 @@ title, subTitle, description
 ))
 */
 
-class FragBsOptions: BaseBottomSheet() {
+class FragBsOptions : BaseBottomSheet() {
     override val cancelable: Boolean = true
 
     companion object {
         const val TAG = "FragBsOptions.TAG"
+        const val BUILDER = "FragBsOptions.BUILDER"
     }
 
-    /*data class Builder(
-            val title: String,
-            val subtitle: String,
-            val content: String
-    ) : Parcelable {
-        companion object {
-            @JvmField val CREATOR: Parcelable.Creator<Builder> = object : Parcelable.Creator<Builder> {
-                override fun createFromParcel(source: Parcel): Builder = Builder(source)
-                override fun newArray(size: Int): Array<Builder?> = arrayOfNulls(size)
-            }
-        }
-
-        constructor(source: Parcel) : this(source.readString(), source.readString(), source.readString())
-
-        override fun describeContents() = 0
-
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
-            dest?.writeString(title)
-            dest?.writeString(subtitle)
-            dest?.writeString(content)
-        }
-    }*/
-
-    fun show(manager: FragmentManager) {
+    fun newInstance(manager: FragmentManager, friendName: String) {
         val bundle = Bundle().apply {
-//            putParcelable(BUNDLE_BUILDER, builder)
+            putString(BUILDER, friendName)
         }
         this.arguments = bundle
         show(manager, TAG)
@@ -63,5 +45,21 @@ class FragBsOptions: BaseBottomSheet() {
     }
 
     private fun bindViews(view: View) {
+        view.matchContainer.setOnClickListener {
+            val friendName = arguments.getString(BUILDER, EMPTY_STRING)
+            if (friendName != EMPTY_STRING) {
+                val act = activity
+                if (act is FragBsOptionsCb) {
+                    act.onFriendMatchListClicked(friendName)
+                }
+            } else {
+                throw IllegalStateException()
+            }
+            this.dismiss()
+        }
     }
+}
+
+interface FragBsOptionsCb {
+    fun onFriendMatchListClicked(friendName: String)
 }

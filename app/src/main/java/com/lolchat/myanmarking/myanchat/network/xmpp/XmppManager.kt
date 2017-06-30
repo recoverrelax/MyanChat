@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import com.lolchat.myanmarking.myanchat.io.interfaces.IFriendChangeListener
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
+import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
 import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsUser
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -132,5 +133,9 @@ class XmppManager(
 
     override fun removeOnFriendChangeListener(listener: IFriendChangeListener){
         rosterManager.removeOnFriendChangeListener(listener)
+    }
+
+    override fun getUpdatedFriendEntityByName(friendName: String): FriendEntity? {
+        return rosterManager.getUpdatedFriendEntityByName(friendName)
     }
 }

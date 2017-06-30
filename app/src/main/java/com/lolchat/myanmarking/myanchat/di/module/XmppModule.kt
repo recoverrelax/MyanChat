@@ -2,6 +2,7 @@ package com.lolchat.myanmarking.myanchat.di.module
 
 import android.app.Application
 import com.lolchat.myanmarking.myanchat.di.scopes.MyAppScope
+import com.lolchat.myanmarking.myanchat.io.Riot.RiotApiConst
 import com.lolchat.myanmarking.myanchat.io.interfaces.IXmppManager
 import com.lolchat.myanmarking.myanchat.io.storage.prefs.PrefsUser
 import com.lolchat.myanmarking.myanchat.io.storage.room.RoomInteractor
@@ -10,6 +11,7 @@ import com.lolchat.myanmarking.myanchat.network.xmpp.RiotChatManager
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotConnManager
 import com.lolchat.myanmarking.myanchat.network.xmpp.RiotRosterManager
 import com.lolchat.myanmarking.myanchat.network.xmpp.XmppManager
+import com.lolchat.myanmarking.myanchat.other.XmppImageHelperImpl
 import dagger.Module
 import dagger.Provides
 
@@ -41,4 +43,8 @@ class XmppModule {
     @Provides
     @MyAppScope
     fun provideConnManager(): RiotConnManager = RiotConnManager()
+
+    @Provides
+    @MyAppScope
+    fun provideImageHelper(riotApiConst: RiotApiConst): XmppImageHelperImpl = XmppImageHelperImpl(riotApiConst)
 }

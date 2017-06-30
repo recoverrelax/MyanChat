@@ -2,10 +2,6 @@ package com.lolchat.myanmarking.myanchat.ui.view_item
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.ColorFilter
-import android.graphics.ColorMatrix
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.Matrix
 import android.support.design.internal.ForegroundLinearLayout
 import android.util.AttributeSet
 import android.view.View
@@ -26,6 +22,7 @@ import com.lolchat.myanmarking.myanchat.io.model.xmpp.FriendEntity
 import com.lolchat.myanmarking.myanchat.io.model.xmpp.PlayingData
 import com.lolchat.myanmarking.myanchat.io.other.DynamicUrlBuilder
 import com.lolchat.myanmarking.myanchat.io.other.EMPTY_STRING
+import com.lolchat.myanmarking.myanchat.other.XmppImageHelperImpl
 import com.lolchat.myanmarking.myanchat.other.util.*
 import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.Observable
@@ -58,10 +55,11 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
     private var viewModel: FriendEntity = FriendEntity.EMPTY
 
     @Inject lateinit var uriBuilder: DynamicUrlBuilder
-    private var timeStampDisposable: Disposable? = null
-    private set
+    @Inject lateinit var riotApiConst: RiotApiConst
+    @Inject lateinit var xmppImageHelper: XmppImageHelperImpl
 
-    private val greyColorFilter: ColorMatrixColorFilter
+    private var timeStampDisposable: Disposable? = null
+        private set
 
     @Suppress("ConvertSecondaryConstructorToPrimary")
     @JvmOverloads
@@ -71,8 +69,6 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
         orientation = LinearLayout.VERTICAL
         val dp10 = dip(10)
         setPadding(dp10, dp10, dp10, dp10)
-
-        greyColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
 
         friendSummonerIcon = find(R.id.friendSummonerIcon)
         friendName = find(R.id.friendName)
@@ -119,17 +115,12 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
             bindPlayingImage()
         }
 
-        val imageUrl = RiotApiConst.getProfileIconUrl(viewModel.sumIconUrl)
-        if (viewModel.sumIconUrl != EMPTY_STRING) {
-            Glide.with(context)
-                    .load(imageUrl)
-                    .dontAnimate()
-                    .error(RiotApiConst.DDRAGON_DEFAULT_PROFILE_IC)
-                    .into(friendSummonerIcon)
-        } else {
-            friendSummonerIcon.setImageDrawable(drawableFromRes(RiotApiConst.DDRAGON_DEFAULT_PROFILE_IC))
-            friendSummonerIcon.colorFilter = if(viewModel.isFriendOnline) null else greyColorFilter
-        }
+        xmppImageHelper.loadProfileIconUrl(
+                context,
+                viewModel.sumIconUrl,
+                friendSummonerIcon,
+                viewModel.isFriendOnline
+        )
     }
 
     private fun bindPlayingImage() {
@@ -141,10 +132,10 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
             Glide.with(context)
                     .load(uriBuilder.getChampIconUrl(pd.championName.key))
                     .dontAnimate()
-                    .error(RiotApiConst.DDRAGON_DEFAULT_NO_CHAMP)
+                    .error(riotApiConst.DDRAGON_DEFAULT_NO_CHAMP)
                     .into(playingChamp)
         } else {
-            playingChamp.setImageDrawable(drawableFromRes(RiotApiConst.DDRAGON_DEFAULT_NO_CHAMP))
+            playingChamp.setImageDrawable(drawableFromRes(riotApiConst.DDRAGON_DEFAULT_NO_CHAMP))
         }
     }
 

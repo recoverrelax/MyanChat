@@ -60,7 +60,7 @@ class FragFriendListAdapter(
             itemView.onLongClick {
                 val item = getFriend(adapterPosition)
                 if (item.isFriendOnline) {
-                    longClickListener.onFriendLongClick(item.name, adapterPosition)
+                    longClickListener.onFriendLongClick(item.name)
                     true
                 } else {
                     false
@@ -111,5 +111,5 @@ class FragFriendListAdapter(
 }
 
 interface OnFriendLongClickListener {
-    fun onFriendLongClick(friendName: String, position: Int)
+    fun onFriendLongClick(friendName: String)
 }
