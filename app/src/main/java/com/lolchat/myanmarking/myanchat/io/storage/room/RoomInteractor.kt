@@ -3,6 +3,7 @@ package com.lolchat.myanmarking.myanchat.io.storage.room
 import com.lolchat.myanmarking.myanchat.io.storage.room.model.ChampionBasic
 import com.lolchat.myanmarking.myanchat.io.storage.room.model.SummonerInfo
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 
 class RoomInteractor(
@@ -17,8 +18,8 @@ class RoomInteractor(
         return Observable.fromCallable { db.championBasicDao().getAllChamps() }
     }
 
-    fun getSummonerInfoById(summonerId: Int): Observable<SummonerInfo>{
-        return Observable.fromCallable { db.summonerInfoDao().getSummonerInfoById(summonerId) }
+    fun getSummonerInfoById(summonerId: Int): Maybe<SummonerInfo>{
+        return Maybe.fromCallable { db.summonerInfoDao().getSummonerInfoById(summonerId) }
     }
 
     fun saveSummonerInfo(summonerInfo: SummonerInfo): Observable<List<Long>> {

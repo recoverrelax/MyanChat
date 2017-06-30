@@ -117,7 +117,7 @@ class FriendView : ForegroundLinearLayout, IFriendEntity, IRecycleableView {
 
         xmppImageHelper.loadProfileIconUrl(
                 context,
-                viewModel.sumIconUrl,
+                viewModel.sumIconId,
                 friendSummonerIcon,
                 viewModel.isFriendOnline
         )

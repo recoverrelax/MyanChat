@@ -7,7 +7,7 @@ import com.lolchat.myanmarking.myanchat.io.enums.RankedLeagueTierDivision
 data class FriendEntity(
         private val xmppId: String,
         val name: String,
-        val sumIconUrl: String,
+        val sumIconId: String,
         val statusMessage: String,
         val isFriendOnline: Boolean,
         val gameStatus: GameStatus,
@@ -19,7 +19,7 @@ data class FriendEntity(
     fun sameAs(friendEntity: FriendEntity): Boolean {
         return this.name == friendEntity.name &&
                 this.xmppId == friendEntity.xmppId &&
-                this.sumIconUrl == friendEntity.sumIconUrl &&
+                this.sumIconId == friendEntity.sumIconId &&
                 this.statusMessage == friendEntity.statusMessage &&
                 this.isFriendOnline == friendEntity.isFriendOnline &&
                 this.gameStatus == friendEntity.gameStatus &&

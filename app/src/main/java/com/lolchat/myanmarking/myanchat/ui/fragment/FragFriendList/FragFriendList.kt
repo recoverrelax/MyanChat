@@ -34,7 +34,7 @@ class FragFriendList : BaseFragment<FragFriendListViewModel, FragFriendListViewS
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainActivity.changeStatusBarColor(R.color.league_blue, true)
+        mainActivity.changeStatusBarColor(R.color.black, true)
 
         val rv = friendListRecyclerView
         if(rv.layoutManager == null){

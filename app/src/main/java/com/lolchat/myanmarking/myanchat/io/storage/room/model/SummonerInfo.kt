@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "summoner_info")
 data class SummonerInfo(
         @PrimaryKey val summonerId: Int,
-        val lastProfileId: String,
+        val summIconId: String,
         val lastSkinName: String,
         val lastSkinVariant: String
 )

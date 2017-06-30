@@ -54,32 +54,21 @@ class FragFriendMatchList : BaseFragment<FragFriendMatchListViewModel, FragFrien
 
         val friendEntity: FriendEntity? = viewModel.xmppManager.getUpdatedFriendEntityByName(friendName)
         Timber.i("FriendEntity: $friendEntity")
-
-        if (friendEntity != null) {
-            xmppImageHelper.loadProfileIconUrl(
-                    context,
-                    friendEntity.sumIconUrl,
-                    friendSummonerIcon,
-                    true
-            )
-
-            val skinInfo = friendEntity.skinInfo
-
-            if (skinInfo != null) {
-                xmppImageHelper.loadSkin(context, friendEntity.skinInfo, collapsingImage)
-                viewModel.saveSummonerInfoToRoom(friendEntity)
-            } else {
-                // if null, try to get from the database
-
-
-                collapsingImage.setImageDrawable(null)
-            }
-
-        }
+        viewModel.loadBasicInfo(friendEntity)
     }
 
     override fun render(viewState: FragFriendMatchListViewStates) {
+        when(viewState){
+            is FragFriendMatchListViewStates.LoadBasicInfo -> {
 
+                xmppImageHelper.loadProfileIconUrl(context, viewState.profileIconUrl, friendSummonerIcon, viewState.isUserOnline)
+
+                viewState.skinInfo?.let {
+                    xmppImageHelper.loadSkin(context, it, collapsingImage)
+                } ?: collapsingImage.setImageDrawable(null)
+
+            }
+        }
     }
 
     override fun onResume() {

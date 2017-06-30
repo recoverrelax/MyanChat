@@ -25,7 +25,6 @@ class XmppImageHelperImpl(
         if (profileIconId != EMPTY_STRING) {
             Glide.with(context)
                     .load(imageUrl)
-                    .dontAnimate()
                     .error(defaultDrawable)
                     .into(view)
         } else {
@@ -42,7 +41,6 @@ class XmppImageHelperImpl(
 
         Glide.with(context)
                 .load(imageUrl)
-                .dontAnimate()
                 .error(defaultDrawable)
                 .into(view)
     }
